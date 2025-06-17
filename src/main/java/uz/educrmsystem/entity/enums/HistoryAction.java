@@ -1,0 +1,6 @@
+package uz.educrmsystem.entity.enums;
+
+public enum HistoryAction {
+    LOGIN, LOGOUT, COURSE_CREATED, GROUP_ASSIGNED, PAYMENT_MADE,
+    HOMEWORK_GIVEN, HOMEWORK_SUBMITTED, SALARY_PAID, PROFILE_UPDATED
+}
