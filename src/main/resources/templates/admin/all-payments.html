@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Payments</title>
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <style>
+        .filter-section {
+            margin-bottom: var(--space-4);
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: var(--space-2);
+            font-weight: 500;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: var(--space-2);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-300);
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="navbar-brand">
+        <a href="/admin" style="text-decoration: none">
+            <h2>Learning Center</h2>
+        </a>
+    </div>
+    <div class="navbar-actions">
+        <!-- Notifications -->
+        <div class="notification-container">
+            <button class="notification-btn" id="notificationBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="notification-badge">3</span>
+            </button>
+            <div class="notification-dropdown" id="notificationDropdown">
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <span class="mark-all-read">Mark all as read</span>
+                </div>
+                <div class="notification-list">
+                    <div class="notification-item unread">
+                        <div class="notification-icon success">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
+                                <polyline points="20,6 9,17 4,12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <p class="notification-title">Assignment Submitted</p>
+                            <span class="notification-time">2 minutes ago</span>
+                        </div>
+                    </div>
+                    <div class="notification-item">
+                        <div class="notification-icon warning">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2">
+                                <triangle cx="12" cy="12" r="10"></triangle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div class="notification-content">
+                            <p class="notification-title">Payment Due</p>
+                            <span class="notification-time">1 hour ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div class="profile-container">
+            <button class="profile-btn" id="profileBtn">
+                <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=2"
+                     alt="Profile" class="profile-avatar">
+                <span class="profile-name">John Doe</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+            </button>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-info">
+                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=2"
+                         alt="Profile">
+                    <div>
+                        <p class="profile-dropdown-name">John Doe</p>
+                        <p class="profile-dropdown-email">john.doe@email.com</p>
+                    </div>
+                </div>
+                <hr>
+                <a href="/student/profile" class="profile-menu-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                </a>
+                <a href="/auth/logout" class="profile-menu-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-menu">
+        <a href="../index.html" class="sidebar-item active">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Dashboard
+        </a>
+        <a href="/admin/courses" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
+                 height="20" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                   color="currentColor">
+                    <path d="M6.514 2c-1.304.129-2.182.419-2.838 1.076c-1.175 1.177-1.175 3.072-1.175 6.863v4.02c0 3.79 0 5.686 1.175 6.864S6.743 22 10.526 22h2.007c3.783 0 5.675 0 6.85-1.177c1.067-1.07 1.166-2.717 1.175-5.846"/>
+                    <path d="m10.526 7l1.003 3.5c.56 1.11 1.263 1.4 3.01 1.5c1.389-.034 2.195-.198 2.883-.796c.469-.408.681-1.023.784-1.635L18.55 7.5m2.508-2v5M8.601 4.933c1.587-1.317 3.001-2.024 5.934-2.802a1.94 1.94 0 0 1 1.009.005c2.596.714 3.998 1.348 5.876 2.758c.08.06.104.172.048.255c-.613.902-1.982 1.633-5.34 2.935a2.98 2.98 0 0 1-2.171-.012c-3.576-1.42-5.22-2.18-5.42-2.969a.17.17 0 0 1 .064-.17"/>
+                </g>
+            </svg>
+            Courses
+        </a>
+        <a href="/admin/groups" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
+                 height="20" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M0 18v-1.575q0-1.075 1.1-1.75T4 14q.325 0 .625.013t.575.062q-.35.525-.525 1.1t-.175 1.2V18H0Zm6 0v-1.625q0-.8.438-1.463t1.237-1.162q.8-.5 1.913-.75T12 12.75q1.325 0 2.438.25t1.912.75q.8.5 1.225 1.163T18 16.375V18H6Zm13.5 0v-1.625q0-.65-.163-1.225t-.487-1.075q.275-.05.563-.062T20 14q1.8 0 2.9.663t1.1 1.762V18h-4.5ZM4 13q-.825 0-1.413-.588T2 11q0-.85.588-1.425T4 9q.85 0 1.425.575T6 11q0 .825-.575 1.413T4 13Zm16 0q-.825 0-1.413-.588T18 11q0-.85.588-1.425T20 9q.85 0 1.425.575T22 11q0 .825-.575 1.413T20 13Zm-8-1q-1.25 0-2.125-.875T9 9q0-1.275.875-2.138T12 6q1.275 0 2.138.863T15 9q0 1.25-.863 2.125T12 12Z"/>
+            </svg>
+            Groups
+        </a>
+        <a href="/admin/requests" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
+                 height="20" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M8 18q-2.502 0-4.251-1.749Q2 14.501 2 12q0-2.502 1.749-4.251Q5.499 6 8 6q.906 0 1.736.26t1.526.753q-1.027.975-1.587 2.272q-.56 1.296-.56 2.715t.56 2.715q.56 1.297 1.587 2.272q-.697.494-1.526.753Q8.906 18 8 18Zm8 0q-.906 0-1.736-.26t-1.526-.753q.195-.177.368-.378l.344-.401q.544.377 1.188.584Q15.283 17 16 17q2.075 0 3.538-1.463T21 12q0-2.075-1.463-3.538T16 7q-.717 0-1.362.208q-.644.207-1.188.584l-.344-.4q-.173-.202-.368-.379q.697-.494 1.526-.753Q15.094 6 16 6q2.502 0 4.251 1.749Q22 9.499 22 12q0 2.502-1.749 4.251Q18.501 18 16 18Zm-4-1.558q-.944-.84-1.472-2Q10 13.282 10 12t.528-2.442q.528-1.16 1.472-2q.944.84 1.472 2Q14 10.718 14 12t-.528 2.442q-.528 1.16-1.472 2Z"/>
+            </svg>
+            Join Requests
+        </a>
+        <a href="/admin/teachers" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
+                 height="20" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                   color="currentColor">
+                    <path d="M2 2h14c1.886 0 2.828 0 3.414.586S20 4.114 20 6v6c0 1.886 0 2.828-.586 3.414S17.886 16 16 16H9m1-9.5h6M2 17v-4c0-.943 0-1.414.293-1.707S3.057 11 4 11h2m-4 6h4m-4 0v5m4-5v-6m0 6v5m0-11h6"/>
+                    <path d="M6 6.5a2 2 0 1 1-4 0a2 2 0 0 1 4 0"/>
+                </g>
+            </svg>
+            Teachers
+        </a>
+        <a href="/admin/all-payment" class="sidebar-item">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
+                 height="20" viewBox="0 0 14 14">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 11.5v2m2.5-3v2m-5-2v2M2.75 4.75a.25.25 0 0 1 0-.5m0 .5a.25.25 0 0 0 0-.5m8.5.5a.25.25 0 1 1 0-.5m0 .5a.25.25 0 1 0 0-.5m-3.186-.861a.833.833 0 0 0-.786-.556h-.645a.744.744 0 0 0-.16 1.47l.983.216a.834.834 0 0 1-.178 1.648h-.556a.834.834 0 0 1-.786-.556M7 2.833V2m0 5v-.833"/>
+                    <path d="M12.5.5h-11a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1"/>
+                </g>
+            </svg>
+            Payments
+        </a>
+        <a href="#" class="sidebar-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            Settings
+        </a>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="page active">
+        <div class="page-header">
+            <h1>All Payments</h1>
+            <p>View and filter payment records.</p>
+        </div>
+
+        <!-- Filters -->
+        <section class="schedule-section">
+            <div class="section-header">
+                <h2>Filter Payments</h2>
+            </div>
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" class="form-input">
+                </div>
+                <div class="filter-group">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" class="form-input">
+                </div>
+                <div class="filter-group">
+                    <label for="status">Status</label>
+                    <select id="status" class="form-input">
+                        <option value="">All Statuses</option>
+                        <option value="PAID">Paid</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="FAILED">Failed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="overdue">Overdue Payments</label>
+                    <select id="overdue" class="form-input">
+                        <option value="">All</option>
+                        <option value="true">Overdue</option>
+                        <option value="false">Not Overdue</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payments Table -->
+        <section class="schedule-section">
+            <div class="section-header">
+                <h2>All Payments</h2>
+            </div>
+            <div class="schedule-table-container">
+                <table class="schedule-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Month</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Paid At</th>
+                    </tr>
+                    </thead>
+                    <tbody id="paymentTableBody">
+                    <tr>
+                        <td>1</td>
+                        <td>John Doe</td>
+                        <td>Java Programming</td>
+                        <td>June 2025</td>
+                        <td>$199.99</td>
+                        <td><span class="status-badge completed">Paid</span></td>
+                        <td>2025-06-01 10:00</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Jane Smith</td>
+                        <td>Python Basics</td>
+                        <td>June 2025</td>
+                        <td>$149.99</td>
+                        <td><span class="status-badge pending">Pending</span></td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Bob Johnson</td>
+                        <td>Data Science</td>
+                        <td>May 2025</td>
+                        <td>$249.99</td>
+                        <td><span class="status-badge overdue">Overdue</span></td>
+                        <td>-</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    // Sample payment data
+    const payments = [
+        {
+            id: 1,
+            student: 'John Doe',
+            course: 'Java Programming',
+            month: 'June 2025',
+            amount: 199.99,
+            status: 'PAID',
+            paidAt: '2025-06-01T10:00:00',
+            dueDate: '2025-06-30'
+        },
+        {
+            id: 2,
+            student: 'Jane Smith',
+            course: 'Python Basics',
+            month: 'June 2025',
+            amount: 149.99,
+            status: 'PENDING',
+            paidAt: null,
+            dueDate: '2025-06-30'
+        },
+        {
+            id: 3,
+            student: 'Bob Johnson',
+            course: 'Data Science',
+            month: 'May 2025',
+            amount: 249.99,
+            status: 'PENDING',
+            paidAt: null,
+            dueDate: '2025-05-30'
+        }
+    ];
+
+    function filterPayments() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const status = document.getElementById('status').value;
+        const overdue = document.getElementById('overdue').value;
+        const currentDate = new Date('2025-06-20'); // Current date for overdue check
+
+        const filteredPayments = payments.filter(payment => {
+            let pass = true;
+
+            // Date filter
+            if (startDate) {
+                const paymentDate = payment.paidAt ? new Date(payment.paidAt) : null;
+                if (paymentDate && paymentDate < new Date(startDate)) pass = false;
+            }
+            if (endDate) {
+                const paymentDate = payment.paidAt ? new Date(payment.paidAt) : null;
+                if (paymentDate && paymentDate > new Date(endDate)) pass = false;
+            }
+
+            // Status filter
+            if (status && payment.status !== status) pass = false;
+
+            // Overdue filter
+            if (overdue !== '') {
+                const isOverdue = payment.status !== 'PAID' && new Date(payment.dueDate) < currentDate;
+                if (overdue === 'true' && !isOverdue) pass = false;
+                if (overdue === 'false' && isOverdue) pass = false;
+            }
+
+            return pass;
+        });
+
+        renderPayments(filteredPayments);
+    }
+
+    function renderPayments(payments) {
+        const tbody = document.getElementById('paymentTableBody');
+        tbody.innerHTML = '';
+        payments.forEach(payment => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                    <td>${payment.id}</td>
+                    <td>${payment.student}</td>
+                    <td>${payment.course}</td>
+                    <td>${payment.month}</td>
+                    <td>$${payment.amount.toFixed(2)}</td>
+                    <td><span class="status-badge ${payment.status === 'PAID' ? 'completed' : payment.status === 'PENDING' ? 'pending' : 'overdue'}">${payment.status === 'PENDING' && new Date(payment.dueDate) < new Date('2025-06-20') ? 'Overdue' : payment.status}</span></td>
+                    <td>${payment.paidAt || '-'}</td>
+                `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Apply filters on input change
+    document.getElementById('startDate').addEventListener('change', filterPayments);
+    document.getElementById('endDate').addEventListener('change', filterPayments);
+    document.getElementById('status').addEventListener('change', filterPayments);
+    document.getElementById('overdue').addEventListener('change', filterPayments);
+
+    // Initial render
+    renderPayments(payments);
+
+    // Toggle notification dropdown
+    document.getElementById('notificationBtn').addEventListener('click', () => {
+        const dropdown = document.getElementById('notificationDropdown');
+        dropdown.classList.toggle('show');
+    });
+
+    // Toggle profile dropdown
+    document.getElementById('profileBtn').addEventListener('click', () => {
+        const dropdown = document.getElementById('profileDropdown');
+        dropdown.classList.toggle('show');
+    });
+
+    // Close dropdowns when clicking outside
+    window.addEventListener('click', (event) => {
+        if (!event.target.closest('.notification-container') && !event.target.closest('.profile-container')) {
+            document.getElementById('notificationDropdown').classList.remove('show');
+            document.getElementById('profileDropdown').classList.remove('show');
+        }
+    });
+</script>
+</body>
+</html>

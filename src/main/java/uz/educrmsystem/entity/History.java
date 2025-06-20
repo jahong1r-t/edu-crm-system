@@ -2,13 +2,16 @@ package uz.educrmsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import uz.educrmsystem.entity.enums.HistoryAction;
 import uz.educrmsystem.entity.enums.Role;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class History {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

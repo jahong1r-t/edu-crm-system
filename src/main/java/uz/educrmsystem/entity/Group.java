@@ -2,6 +2,8 @@ package uz.educrmsystem.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import uz.educrmsystem.entity.enums.GroupStatus;
 
 import java.time.LocalDate;
@@ -9,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

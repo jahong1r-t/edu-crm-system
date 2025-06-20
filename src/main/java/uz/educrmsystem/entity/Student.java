@@ -1,9 +1,7 @@
 package uz.educrmsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import uz.educrmsystem.entity.enums.LearnType;
 
 import java.util.ArrayList;
@@ -11,9 +9,11 @@ import java.util.List;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 public class Student extends User {
+
     @Enumerated(EnumType.STRING)
     private LearnType learnType;
 

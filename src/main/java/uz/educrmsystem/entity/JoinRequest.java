@@ -1,25 +1,26 @@
 package uz.educrmsystem.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-public class Notification {
+@AllArgsConstructor
+@NoArgsConstructor
+public class JoinRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User toUser;
+    private User user;
 
-    private String title;
-    private LocalDateTime createdAt;
-    private boolean isRead;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 }
