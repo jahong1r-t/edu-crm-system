@@ -1,16 +1,14 @@
 package uz.educrmsystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +19,8 @@ public class Course {
     private int duration;
     private Double price;
     private boolean isActive;
+
+    @OneToOne
+    @JoinColumn(name = "attachment_id")
+    private Attachment attachment;
 }

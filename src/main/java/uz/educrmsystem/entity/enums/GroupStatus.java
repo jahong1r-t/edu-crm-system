@@ -4,5 +4,5 @@ public enum GroupStatus {
     NOT_STARTED,
     ACTIVE,
     FINISHED,
-    CANCELLED
+    CANCELLED,
 }

@@ -1,374 +1,485 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Management</title>
-    <link rel="stylesheet" href="/assets/css/dashboard.css">
-    <style>
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1002;
-            align-items: center;
-            justify-content: center;
-        }
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Learning Center - Admin Dashboard</title>
 
-        .modal-content {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-lg);
-            padding: var(--space-6);
-            width: 100%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-4);
-        }
-
-        .modal-header h2 {
-            font-size: var(--font-size-xl);
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--gray-600);
-            cursor: pointer;
-            font-size: var(--font-size-lg);
-        }
-
-        .modal-close:hover {
-            color: var(--gray-900);
-        }
-    </style>
+    <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
-<!-- Navbar -->
-<nav class="navbar">
-    <div class="navbar-brand">
-        <a href="/admin" style="text-decoration: none">
-            <h2>Learning Center</h2>
-        </a>
-    </div>
-    <div class="navbar-actions">
-        <!-- Notifications -->
-        <div class="notification-container">
-            <button class="notification-btn" id="notificationBtn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                </svg>
-                <span class="notification-badge">3</span>
-            </button>
-            <div class="notification-dropdown" id="notificationDropdown">
-                <div class="notification-header">
-                    <h3>Notifications</h3>
-                    <span class="mark-all-read">Mark all as read</span>
-                </div>
-                <div class="notification-list">
-                    <div class="notification-item unread">
-                        <div class="notification-icon success">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2">
-                                <polyline points="20,6 9,17 4,12"></polyline>
-                            </svg>
-                        </div>
-                        <div class="notification-content">
-                            <p class="notification-title">Assignment Submitted</p>
-                            <span class="notification-time">2 minutes ago</span>
-                        </div>
-                    </div>
-                    <div class="notification-item">
-                        <div class="notification-icon warning">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                 stroke-width="2">
-                                <triangle cx="12" cy="12" r="10"></triangle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                        </div>
-                        <div class="notification-content">
-                            <p class="notification-title">Payment Due</p>
-                            <span class="notification-time">1 hour ago</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Profile Dropdown -->
-        <div class="profile-container">
-            <button class="profile-btn" id="profileBtn">
-                <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=2"
-                     alt="Profile" class="profile-avatar">
-                <span class="profile-name">John Doe</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="6,9 12,15 18,9"></polyline>
-                </svg>
-            </button>
-            <div class="profile-dropdown" id="profileDropdown">
-                <div class="profile-info">
-                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&dpr=2"
-                         alt="Profile">
-                    <div>
-                        <p class="profile-dropdown-name">John Doe</p>
-                        <p class="profile-dropdown-email">john.doe@email.com</p>
-                    </div>
-                </div>
-                <hr>
-                <a href="/student/profile" class="profile-menu-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                    Profile
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary" href="#">
+            <i class="bi bi-mortarboard-fill me-2"></i>
+            Learning Center
+        </a>
+
+        <div class="navbar-nav ms-auto d-flex flex-row">
+            <!-- Notification Bell -->
+            <div class="nav-item dropdown me-3">
+                <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button"
+                   data-bs-toggle="dropdown">
+                    <i class="bi bi-bell fs-5"></i>
                 </a>
-                <a href="/auth/logout" class="profile-menu-item">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16,17 21,12 16,7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                    Logout
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><h6 class="dropdown-header">Notifications</h6></li>
+                    <li><a class="dropdown-item" href="#">New course enrollment</a></li>
+                    <li><a class="dropdown-item" href="#">Payment received</a></li>
+                    <li><a class="dropdown-item" href="#">Join request pending</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item text-center" href="#">View all notifications</a></li>
+                </ul>
+            </div>
+
+            <!-- User Profile -->
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+                   data-bs-toggle="dropdown">
+                    <img src="https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2"
+                         alt="Profile" class="rounded-circle me-2" width="32" height="32">
+                    <span class="d-none d-md-inline">Admin User</span>
                 </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item text-danger" href="#"><i
+                            class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                </ul>
             </div>
         </div>
     </div>
 </nav>
 
 <!-- Sidebar -->
-<div class="sidebar">
-    <div class="sidebar-menu">
-        <a href="/admin" class="sidebar-item">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7"></rect>
-                <rect x="14" y="3" width="7" height="7"></rect>
-                <rect x="14" y="14" width="7" height="7"></rect>
-                <rect x="3" y="14" width="7" height="7"></rect>
-            </svg>
-            Dashboard
-        </a>
-        <a href="/admin/courses" class="sidebar-item active">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
-                 height="20" viewBox="0 0 24 24">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                   color="currentColor">
-                    <path d="M6.514 2c-1.304.129-2.182.419-2.838 1.076c-1.175 1.177-1.175 3.072-1.175 6.863v4.02c0 3.79 0 5.686 1.175 6.864S6.743 22 10.526 22h2.007c3.783 0 5.675 0 6.85-1.177c1.067-1.07 1.166-2.717 1.175-5.846"/>
-                    <path d="m10.526 7l1.003 3.5c.56 1.11 1.263 1.4 3.01 1.5c1.389-.034 2.195-.198 2.883-.796c.469-.408.681-1.023.784-1.635L18.55 7.5m2.508-2v5M8.601 4.933c1.587-1.317 3.001-2.024 5.934-2.802a1.94 1.94 0 0 1 1.009.005c2.596.714 3.998 1.348 5.876 2.758c.08.06.104.172.048.255c-.613.902-1.982 1.633-5.34 2.935a2.98 2.98 0 0 1-2.171-.012c-3.576-1.42-5.22-2.18-5.42-2.969a.17.17 0 0 1 .064-.17"/>
-                </g>
-            </svg>
-            Courses
-        </a>
-        <a href="/admin/groups" class="sidebar-item">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
-                 height="20" viewBox="0 0 24 24">
-                <path fill="currentColor"
-                      d="M0 18v-1.575q0-1.075 1.1-1.75T4 14q.325 0 .625.013t.575.062q-.35.525-.525 1.1t-.175 1.2V18H0Zm6 0v-1.625q0-.8.438-1.463t1.237-1.162q.8-.5 1.913-.75T12 12.75q1.325 0 2.438.25t1.912.75q.8.5 1.225 1.163T18 16.375V18H6Zm13.5 0v-1.625q0-.65-.163-1.225t-.487-1.075q.275-.05.563-.062T20 14q1.8 0 2.9.663t1.1 1.762V18h-4.5ZM4 13q-.825 0-1.413-.588T2 11q0-.85.588-1.425T4 9q.85 0 1.425.575T6 11q0 .825-.575 1.413T4 13Zm16 0q-.825 0-1.413-.588T18 11q0-.85.588-1.425T20 9q.85 0 1.425.575T22 11q0 .825-.575 1.413T20 13Zm-8-1q-1.25 0-2.125-.875T9 9q0-1.275.875-2.138T12 6q1.275 0 2.138.863T15 9q0 1.25-.863 2.125T12 12Z"/>
-            </svg>
-            Groups
-        </a>
-        <a href="/admin/requests" class="sidebar-item">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
-                 height="20" viewBox="0 0 24 24">
-                <path fill="currentColor"
-                      d="M8 18q-2.502 0-4.251-1.749Q2 14.501 2 12q0-2.502 1.749-4.251Q5.499 6 8 6q.906 0 1.736.26t1.526.753q-1.027.975-1.587 2.272q-.56 1.296-.56 2.715t.56 2.715q.56 1.297 1.587 2.272q-.697.494-1.526.753Q8.906 18 8 18Zm8 0q-.906 0-1.736-.26t-1.526-.753q.195-.177.368-.378l.344-.401q.544.377 1.188.584Q15.283 17 16 17q2.075 0 3.538-1.463T21 12q0-2.075-1.463-3.538T16 7q-.717 0-1.362.208q-.644.207-1.188.584l-.344-.4q-.173-.202-.368-.379q.697-.494 1.526-.753Q15.094 6 16 6q2.502 0 4.251 1.749Q22 9.499 22 12q0 2.502-1.749 4.251Q18.501 18 16 18Zm-4-1.558q-.944-.84-1.472-2Q10 13.282 10 12t.528-2.442q.528-1.16 1.472-2q.944.84 1.472 2Q14 10.718 14 12t-.528 2.442q-.528 1.16-1.472 2Z"/>
-            </svg>
-            Join Requests
-        </a>
-        <a href="/admin/teachers" class="sidebar-item">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
-                 height="20" viewBox="0 0 24 24">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                   color="currentColor">
-                    <path d="M2 2h14c1.886 0 2.828 0 3.414.586S20 4.114 20 6v6c0 1.886 0 2.828-.586 3.414S17.886 16 16 16H9m1-9.5h6M2 17v-4c0-.943 0-1.414.293-1.707S3.057 11 4 11h2m-4 6h4m-4 0v5m4-5v-6m0 6v5m0-11h6"/>
-                    <path d="M6 6.5a2 2 0 1 1-4 0a2 2 0 0 1 4 0"/>
-                </g>
-            </svg>
-            Teachers
-        </a>
-        <a href="/admin/all-payment" class="sidebar-item">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" width="20"
-                 height="20" viewBox="0 0 14 14">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 11.5v2m2.5-3v2m-5-2v2M2.75 4.75a.25.25 0 0 1 0-.5m0 .5a.25.25 0 0 0 0-.5m8.5.5a.25.25 0 1 1 0-.5m0 .5a.25.25 0 1 0 0-.5m-3.186-.861a.833.833 0 0 0-.786-.556h-.645a.744.744 0 0 0-.16 1.47l.983.216a.834.834 0 0 1-.178 1.648h-.556a.834.834 0 0 1-.786-.556M7 2.833V2m0 5v-.833"/>
-                    <path d="M12.5.5h-11a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1"/>
-                </g>
-            </svg>
-            Payments
-        </a>
-        <a href="#" class="sidebar-item">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            Settings
-        </a>
+<div class="sidebar bg-white border-end">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="/admin">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-book me-2"></i>
+                    Courses
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-people me-2"></i>
+                    Groups
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="requests.html">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Join Requests
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-person-workspace me-2"></i>
+                    Teachers
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="payments.html">
+                    <i class="bi bi-credit-card me-2"></i>
+                    Payments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="statistics.html">
+                    <i class="bi bi-graph-up me-2"></i>
+                    Statistics
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-gear me-2"></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
 
 <!-- Main Content -->
 <main class="main-content">
-    <div class="page active">
-        <div class="page-header">
-            <h1>Course Management</h1>
-            <p>Manage your courses here.</p>
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-0">Courses Management</h1>
+                <p class="text-muted">Manage all courses and their details</p>
+            </div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                <i class="bi bi-plus-circle me-2"></i>Add Course
+            </button>
         </div>
 
-        <!-- Courses Table -->
-        <section class="schedule-section">
-            <div class="section-header">
-                <h2>All Courses</h2>
-                <button class="btn-primary" onclick="openAddCourseModal()">Add Course</button>
+        <!-- Data Table -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="small-header">Name</th>
+                            <th scope="col" class="small-header">Description</th>
+                            <th scope="col" class="small-header">Duration</th>
+                            <th scope="col" class="small-header">Price</th>
+                            <th scope="col" class="small-header">Status</th>
+                            <th scope="col" class="small-header">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="c : ${courses}">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&dpr=2"
+                                         alt="Course" class="rounded me-3" width="40" height="40">
+                                    <div>
+                                        <div class="fw-bold" th:text="${c.name}">JavaScript</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td th:text="${c.description}">Complete guide to JavaScript programming</td>
+                            <td th:text="${c.duration}">6</td>
+                            <td th:text="${c.price}">$299</td>
+                            <td>
+                                <span th:if="${c.isActive()}" class="badge bg-success">Active</span>
+                                <span th:unless="${c.isActive()}" class="badge bg-danger">Inactive</span>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#editModal">
+                                            <i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#changeStatusModal">
+                                            <i class="bi bi-arrow-repeat me-2"></i>Change Status</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger" href="#">
+                                            <i class="bi bi-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&dpr=2"
+                                         alt="Course" class="rounded me-3" width="40" height="40">
+                                    <div>
+                                        <div class="fw-bold">JavaScript</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Complete guide to JavaScript programming</td>
+                            <td>6</td>
+                            <td>$299</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#editModal">
+                                            <i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#changeStatusModal">
+                                            <i class="bi bi-arrow-repeat me-2"></i>Change Status</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger" href="#">
+                                            <i class="bi bi-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&dpr=2"
+                                         alt="Course" class="rounded me-3" width="40" height="40">
+                                    <div>
+                                        <div class="fw-bold">JavaScript</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Complete guide to JavaScript programming</td>
+                            <td>6</td>
+                            <td>$299</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#editModal">
+                                            <i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#changeStatusModal">
+                                            <i class="bi bi-arrow-repeat me-2"></i>Change Status</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger" href="#">
+                                            <i class="bi bi-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&dpr=2"
+                                         alt="Course" class="rounded me-3" width="40" height="40">
+                                    <div>
+                                        <div class="fw-bold">JavaScript</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Complete guide to JavaScript programming</td>
+                            <td>6</td>
+                            <td>$299</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#editModal">
+                                            <i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#changeStatusModal">
+                                            <i class="bi bi-arrow-repeat me-2"></i>Change Status</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger" href="#">
+                                            <i class="bi bi-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&dpr=2"
+                                         alt="Course" class="rounded me-3" width="40" height="40">
+                                    <div>
+                                        <div class="fw-bold">JavaScript</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Complete guide to JavaScript programming</td>
+                            <td>6</td>
+                            <td>$299</td>
+                            <td><span class="badge bg-success">Active</span></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#editModal">
+                                            <i class="bi bi-pencil me-2"></i>Edit</a></li>
+                                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                               data-bs-target="#changeStatusModal">
+                                            <i class="bi bi-arrow-repeat me-2"></i>Change Status</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item text-danger" href="#">
+                                            <i class="bi bi-trash me-2"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="schedule-table-container">
-                <table class="schedule-table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Duration</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Java Programming</td>
-                        <td>Learn Java fundamentals</td>
-                        <td>40 hours</td>
-                        <td>$199.99</td>
-                        <td><span class="status-badge completed">Active</span></td>
-                        <td>
-                            <button class="btn-primary" onclick="openEditCourseModal()">Edit</button>
-                            <button class="btn-secondary">Delete</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        </div>
     </div>
+
+    <form action="/admin/add-course" method="post" enctype="multipart/form-data">
+        <input name="file" type="file">
+        <button type="submit">Submit</button>
+    </form>
+
 </main>
 
-<!-- Add Course Modal -->
-<div class="modal" id="addCourseModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Add Course</h2>
-            <button class="modal-close" onclick="closeModal('addCourseModal')">&times;</button>
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addModalLabel">Add New Course</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/admin/add-course" method="post" enctype="multipart/form-data" novalidate>
+                    <div class="mb-3">
+                        <label for="courseName" class="form-label">Course Name</label>
+                        <input name="name" type="text" class="form-control" id="courseName"
+                               placeholder="Enter course name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseDescription" class="form-label">Description</label>
+                        <textarea name="description" class="form-control" id="courseDescription" rows="3"
+                                  placeholder="Enter course description"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="courseDuration" class="form-label">Duration (months)</label>
+                            <input name="duration" type="number" class="form-control" id="courseDuration"
+                                   placeholder="6">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="coursePrice" class="form-label">Price ($)</label>
+                            <input name="price" type="number" class="form-control" id="coursePrice" placeholder="299">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="courseStatus" class="form-label">Status</label>
+                            <select name="isActive" class="form-select" id="courseStatus">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="courseImage" class="form-label">Course Image</label>
+                        <input type="file" class="form-control" id="courseImage" accept="image/*" name="file" required>
+                    </div>
+                    <div class="modal-footer" style="margin-top: 35px; padding-bottom: -50px">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Course</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <form id="addCourseForm" class="profile-form">
-            <div class="form-group">
-                <label for="addName">Course Name</label>
-                <input type="text" id="addName" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="addDescription">Description</label>
-                <textarea id="addDescription" class="form-textarea"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="addDuration">Duration (hours)</label>
-                <input type="number" id="addDuration" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="addPrice">Price ($)</label>
-                <input type="number" step="0.01" id="addPrice" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="addIsActive">Active</label>
-                <input type="checkbox" id="addIsActive" class="form-input">
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick="closeModal('addCourseModal')">Cancel</button>
-                <button type="submit" class="btn-primary">Add Course</button>
-            </div>
-        </form>
     </div>
 </div>
 
-<!-- Edit Course Modal -->
-<div class="modal" id="editCourseModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Edit Course</h2>
-            <button class="modal-close" onclick="closeModal('editCourseModal')">&times;</button>
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit Course</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="editCourseName" class="form-label">Course Name</label>
+                        <input type="text" class="form-control" id="editCourseName" value="JavaScript Fundamentals">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCourseDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editCourseDescription" rows="3">Complete guide to JavaScript programming from basics to advanced concepts</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="editCourseDuration" class="form-label">Duration (months)</label>
+                            <input type="number" class="form-control" id="editCourseDuration" value="6">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="editCoursePrice" class="form-label">Price ($)</label>
+                            <input type="number" class="form-control" id="editCoursePrice" value="299">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="editCourseStatus" class="form-label">Status</label>
+                            <select class="form-select" id="editCourseStatus">
+                                <option value="active" selected>Active</option>
+                                <option value="draft">Draft</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCourseImage" class="form-label">Course Image</label>
+                        <input type="file" class="form-control" id="editCourseImage" accept="image/*">
+                        <div class="form-text">Current image will be replaced if you select a new one.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Save Changes</button>
+            </div>
         </div>
-        <form id="editCourseForm" class="profile-form">
-            <div class="form-group">
-                <label for="editName">Course Name</label>
-                <input type="text" id="editName" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="editDescription">Description</label>
-                <textarea id="editDescription" class="form-textarea"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="editDuration">Duration (hours)</label>
-                <input type="number" id="editDuration" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="editPrice">Price ($)</label>
-                <input type="number" step="0.01" id="editPrice" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="editIsActive">Active</label>
-                <input type="checkbox" id="editIsActive" class="form-input">
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick="closeModal('editCourseModal')">Cancel</button>
-                <button type="submit" class="btn-primary">Save Changes</button>
-            </div>
-        </form>
     </div>
 </div>
 
-<script>
-    function openAddCourseModal() {
-        document.getElementById('addCourseModal').style.display = 'flex';
-    }
+<!-- Change Status Modal -->
+<div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="changeStatusModalLabel">Change Course Status</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="newStatus" class="form-label">New Status</label>
+                        <select class="form-select" id="newStatus">
+                            <option value="">Select new status...</option>
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Change Status</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    function openEditCourseModal() {
-        document.getElementById('editCourseModal').style.display = 'flex';
-        // Populate form with course data (placeholder)
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    // Toggle notification dropdown
-    document.getElementById('notificationBtn').addEventListener('click', () => {
-        const dropdown = document.getElementById('notificationDropdown');
-        dropdown.classList.toggle('show');
-    });
-
-    // Toggle profile dropdown
-    document.getElementById('profileBtn').addEventListener('click', () => {
-        const dropdown = document.getElementById('profileDropdown');
-        dropdown.classList.toggle('show');
-    });
-
-    // Close dropdowns when clicking outside
-    window.addEventListener('click', (event) => {
-        if (!event.target.closest('.notification-container') && !event.target.closest('.profile-container')) {
-            document.getElementById('notificationDropdown').classList.remove('show');
-            document.getElementById('profileDropdown').classList.remove('show');
-        }
-    });
-</script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
