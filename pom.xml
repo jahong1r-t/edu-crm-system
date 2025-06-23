@@ -17,6 +17,8 @@
         <spring.security.version>6.3.1</spring.security.version>
     </properties>
 
+
+
     <dependencies>
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -24,7 +26,6 @@
             <version>6.1.0</version>
             <scope>provided</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -69,12 +70,6 @@
         </dependency>
 
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.19.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>6.1.14</version>
@@ -108,6 +103,18 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>5.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>2.7.18</version>
         </dependency>
 
         <dependency>

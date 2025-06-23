@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uz.educrmsystem.entity.enums.RequestStatus;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -25,6 +27,8 @@ public class JoinRequest {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    private LocalDateTime requestDate;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;

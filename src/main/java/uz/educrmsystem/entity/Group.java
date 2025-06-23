@@ -14,29 +14,32 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-    public class Group {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        private String name;
-        private LocalDate startDate;
-        private LocalDate endDate;
-        private String startTime;
-        private String endTime;
+@Table(name = "groups")
+public class Group {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String startTime;
+    private String endTime;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "teacher_id")
-        private Teacher teacher;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-        @ManyToMany(mappedBy = "groups")
-        private List<Student> students = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
-        @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<Homework> homeworks = new ArrayList<>();
+    @ManyToMany(mappedBy = "groups")
+    private List<Student> students = new ArrayList<>();
 
-        @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-        private List<Attendance> attendances = new ArrayList<>();
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Homework> homeworks = new ArrayList<>();
 
-        @Enumerated(EnumType.STRING)
-        private GroupStatus groupStatus;
-    }
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    private List<Attendance> attendances = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private GroupStatus groupStatus;
+}

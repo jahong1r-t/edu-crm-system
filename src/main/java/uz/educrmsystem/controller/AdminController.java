@@ -1,30 +1,27 @@
 package uz.educrmsystem.controller;
 
-import com.nimbusds.oauth2.sdk.Request;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import uz.educrmsystem.entity.Group;
-import uz.educrmsystem.exception.InvalidUserInputException;
+import uz.educrmsystem.entity.enums.GroupStatus;
+import uz.educrmsystem.payload.CourseDTO;
 import uz.educrmsystem.payload.GroupDTO;
+import uz.educrmsystem.payload.TeacherDTO;
 import uz.educrmsystem.service.CourseService;
+import uz.educrmsystem.service.GroupService;
+import uz.educrmsystem.service.TeacherService;
 
-import java.time.LocalDate;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
+    final GroupService groupService;
+    final TeacherService teacherService;
     final CourseService courseService;
 
     @GetMapping
@@ -40,6 +37,10 @@ public class AdminController {
 
     @GetMapping("/groups")
     public String groups(Model model) {
+        model.addAttribute("groups", groupService.getAllGroupDTOs());
+        model.addAttribute("teachers", groupService.getAllActiveTeachers());
+        model.addAttribute("courses", courseService.getAllActiveCourses());
+
         return "/admin/group";
     }
 
@@ -49,7 +50,7 @@ public class AdminController {
     }
 
     @GetMapping("/requests")
-    public String requests(Model model) {
+    public String requests() {
         return "/admin/requests";
     }
 
@@ -63,78 +64,92 @@ public class AdminController {
         return "/admin/all-payments";
     }
 
-//    @PostMapping("/add-course")
-//    public String addCourse(@RequestParam("name") String name,
-//                            @RequestParam(name = "description") String description,
-//                            @RequestParam(name = "duration") int duration,
-//                            @RequestParam(name = "price") Double price,
-//                            @RequestParam(name = "isActive") boolean isActive,
-//                            @RequestParam(name = "file") MultipartFile file) {
-//
-//
-//        System.err.println("name: " + name + "description: " + description + "duration: " + duration + "price: " + price + "isActive: " + isActive);
-//
-//        CourseDTO courseDTO = new CourseDTO();
-//        courseDTO.setName(name);
-//        courseDTO.setDescription(description);
-//        courseDTO.setDuration(duration);
-//        courseDTO.setPrice(price);
-//        courseDTO.setActive(isActive);
-//
-//        courseService.addCourse(courseDTO, file, new BeanPropertyBindingResult(courseDTO, "courseDTO"));
-//
-//        return "redirect:/admin/courses";
-//    }
-
-
     @PostMapping("/add-course")
-    public String addCourse(@RequestParam("file") MultipartFile file) {
-        try {
-            if (file.isEmpty()) {
-                return "redirect:/admin/courses?error=empty_file";
-            }
+    public String addCourse(@Valid @ModelAttribute CourseDTO courseDTO, BindingResult bindingResult) {
+        courseService.addCourse(courseDTO, bindingResult);
 
-            System.out.println("Fayl nomi: " + file.getOriginalFilename());
-            System.out.println("Fayl hajmi: " + file.getSize() + " bayt");
+        return "redirect:/admin/courses";
+    }
+
+    @PostMapping("/update-course")
+    public String updateCourse(@Valid @ModelAttribute CourseDTO courseDTO, BindingResult bindingResult) {
+
+        return "redirect:/admin/courses";
+    }
+
+    @PostMapping("/change-status-course")
+    public String changeStatusCourse(@RequestParam(name = "id") Long id,
+                                     @RequestParam(name = "status") Boolean status) {
+        courseService.changeStatus(id, status);
+
+        return "redirect:/admin/courses";
+    }
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/admin/courses?error=upload_failed";
-        }
+    @GetMapping("/delete-course/{id}")
+    public String deleteCourse(@PathVariable("id") Long id) {
+        courseService.deleteCourse(id);
 
-        return "redirect:/admin/courses?success=true";
+        return "redirect:/admin/courses";
     }
 
 
     @PostMapping("/add-group")
     public String addGroup(@Valid @ModelAttribute("group") GroupDTO groupDTO, BindingResult bindingResult) {
+        groupService.addGroup(groupDTO, bindingResult);
 
-        if (bindingResult.hasErrors()) {
-            throw new InvalidUserInputException(
-                    Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
-        }
-
-        Group group = new Group();
-
-        group.setName(groupDTO.getName());
-        group.setStartDate(LocalDate.parse(groupDTO.getStartDate()));
-        group.setEndDate(LocalDate.parse(groupDTO.getEndDate()));
-        group.setStartTime(groupDTO.getStartTime());
-        group.setEndTime(groupDTO.getEndTime());
-
-//        Teacher teacher = entityManager.find(Teacher.class, groupDTO.getTeacherId());
-//        group.setTeacher(teacher);
-        group.setGroupStatus(groupDTO.getGroupStatus());
-
-//        entityManager.persist(
-//                Group.builder()
-//                        .name(group.getName())
-//                        .startDate(group.getStartDate())
-//                        .endDate(group.getEndDate())
-//                        .groupStatus(GroupStatus.NOT_STARTED)
-//
-//                        .build());
-        return "redirect:/admin/courses";
+        return "redirect:/admin/groups";
     }
+
+
+    @GetMapping("/delete-group/{id}")
+    public String deleteGroup(@PathVariable("id") Long id) {
+        groupService.deleteGroup(id);
+        return "redirect:/admin/groups";
+    }
+
+    @PostMapping
+    public String updateGroup(@Valid @ModelAttribute GroupDTO groupDTO, BindingResult bindingResult) {
+        return "redirect:/admin/groups";
+    }
+
+    @PostMapping("/change-status-group")
+    public String changeStatus(@RequestParam(name = "id") Long id,
+                               @RequestParam(name = "status") GroupStatus status) {
+        groupService.changeStatus(id, status);
+
+        return "redirect:/admin/groups";
+    }
+
+
+    @GetMapping("/teachers")
+    public String getTeachers(Model model) {
+        model.addAttribute("teachers", teacherService.getAllTeachers());
+        return "/admin/teacher";
+    }
+
+    @PostMapping("/add-teacher")
+    public String addTeacher(@Valid @ModelAttribute TeacherDTO teacherDTO, BindingResult bindingResult) {
+        teacherService.addTeacher(teacherDTO, bindingResult);
+        return "redirect:/admin/teachers";
+    }
+
+    @PostMapping("/update-teacher")
+    public String updateTeacher(@ModelAttribute TeacherDTO teacherDTO) {
+        teacherService.updateTeacher(teacherDTO.getId(), teacherDTO);
+        return "redirect:/admin/teachers";
+    }
+
+    @PostMapping("/change-status-teacher")
+    public String changeStatus(@RequestParam("id") Long id, @RequestParam("status") Boolean isActive) {
+        teacherService.changeStatus(id, isActive);
+        return "redirect:/admin/teachers";
+    }
+
+    @GetMapping("/delete-teacher/{id}")
+    public String deleteTeacher(@PathVariable("id") Long id) {
+        teacherService.deleteTeacher(id);
+        return "redirect:/admin/teachers";
+    }
+
 }

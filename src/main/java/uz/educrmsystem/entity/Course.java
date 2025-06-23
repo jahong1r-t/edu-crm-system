@@ -16,11 +16,7 @@ public class Course {
 
     private String name;
     private String description;
-    private int duration;
+    private Integer duration;
     private Double price;
-    private boolean isActive;
-
-    @OneToOne
-    @JoinColumn(name = "attachment_id")
-    private Attachment attachment;
+    private Boolean isActive;
 }

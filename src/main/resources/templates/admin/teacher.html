@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Learning Center - Admin Dashboard</title>
+    <title>Learning Center - Teacher Management</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,9 +21,7 @@
             <i class="bi bi-mortarboard-fill me-2"></i>
             Learning Center
         </a>
-
         <div class="navbar-nav ms-auto d-flex flex-row">
-            <!-- Notification Bell -->
             <div class="nav-item dropdown me-3">
                 <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button"
                    data-bs-toggle="dropdown">
@@ -31,17 +29,14 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><h6 class="dropdown-header">Notifications</h6></li>
-                    <li><a class="dropdown-item" href="#">New course enrollment</a></li>
-                    <li><a class="dropdown-item" href="#">Payment received</a></li>
-                    <li><a class="dropdown-item" href="#">Join request pending</a></li>
+                    <li><a class="dropdown-item" href="#">New teacher added</a></li>
+                    <li><a class="dropdown-item" href="#">Teacher status changed</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
                     <li><a class="dropdown-item text-center" href="#">View all notifications</a></li>
                 </ul>
             </div>
-
-            <!-- User Profile -->
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
                    data-bs-toggle="dropdown">
@@ -63,7 +58,6 @@
     </div>
 </nav>
 
-<!-- Sidebar -->
 <div class="sidebar bg-white border-end">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -119,21 +113,18 @@
     </div>
 </div>
 
-<!-- Main Content -->
 <main class="main-content">
     <div class="container-fluid">
-        <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h3 mb-0">Courses Management</h1>
-                <p class="text-muted">Manage all courses and their details</p>
+                <h1 class="h3 mb-0">Teacher Management</h1>
+                <p class="text-muted">Manage all teachers and their details</p>
             </div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
-                <i class="bi bi-plus-circle me-2"></i>Add Course
+                <i class="bi bi-plus-circle me-2"></i>Add Teacher
             </button>
         </div>
 
-        <!-- Data Table -->
         <div class="card border-0 shadow-sm">
             <div class="card-body">
                 <div class="table-responsive">
@@ -141,28 +132,30 @@
                         <thead class="table-light">
                         <tr>
                             <th scope="col" class="small-header">Name</th>
-                            <th scope="col" class="small-header">Description</th>
-                            <th scope="col" class="small-header">Duration</th>
-                            <th scope="col" class="small-header">Price</th>
+                            <th scope="col" class="small-header">Email</th>
+                            <th scope="col" class="small-header">Specialty</th>
+                            <th scope="col" class="small-header">Experience (Years)</th>
+                            <th scope="col" class="small-header">Salary ($)</th>
                             <th scope="col" class="small-header">Status</th>
                             <th scope="col" class="small-header">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="c : ${courses}">
+                        <tr th:each="t : ${teachers}">
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div>
-                                        <div class="fw-bold" th:text="${c.name}">JavaScript</div>
+                                        <div class="fw-bold" th:text="${t.name + ' ' + t.surname}">John Doe</div>
                                     </div>
                                 </div>
                             </td>
-                            <td th:text="${c.description}">Complete guide to JavaScript programming</td>
-                            <td th:text="${c.duration}">6</td>
-                            <td th:text="${c.price}">$299</td>
+                            <td th:text="${t.email}">john.doe@example.com</td>
+                            <td th:text="${t.specialty}">Programming</td>
+                            <td th:text="${t.experience}">5</td>
+                            <td th:text="${t.salary}">5000</td>
                             <td>
-                                <span th:if="${c.isActive}" class="badge bg-success">Active</span>
-                                <span th:unless="${c.isActive}" class="badge bg-danger">Inactive</span>
+                                <span th:if="${t.isActive}" class="badge bg-success">Active</span>
+                                <span th:unless="${t.isActive}" class="badge bg-danger">Inactive</span>
                             </td>
                             <td>
                                 <div class="dropdown">
@@ -174,13 +167,13 @@
                                         <li>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                                data-bs-target="#editModal"
-                                               th:attr="data-id=${c.id},data-name=${c.name},data-description=${c.description},data-duration=${c.duration},data-price=${c.price},data-status=${c.isActive}">
+                                               th:attr="data-id=${t.id},data-name=${t.name},data-surname=${t.surname},data-email=${t.email},data-specialty=${t.specialty},data-experience=${t.experience},data-salary=${t.salary},data-birth-date=${t.birthDate},data-phone-number=${t.phoneNumber},data-status=${t.isActive}">
                                                 <i class="bi bi-pencil me-2"></i>Edit
                                             </a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                               data-bs-target="#changeStatusModal" th:attr="data-id=${c.id}">
+                                               data-bs-target="#changeStatusModal" th:attr="data-id=${t.id}">
                                                 <i class="bi bi-arrow-repeat me-2"></i>Change Status
                                             </a>
                                         </li>
@@ -189,7 +182,7 @@
                                         </li>
                                         <li>
                                             <a class="dropdown-item text-danger"
-                                               th:href="@{/admin/delete-course/{id}(id=${c.id})}">
+                                               th:href="@{/admin/delete-teacher/{id}(id=${t.id})}">
                                                 <i class="bi bi-trash me-2"></i>Delete
                                             </a>
                                         </li>
@@ -210,42 +203,74 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addModalLabel">Add New Course</h1>
+                <h1 class="modal-title fs-5" id="addModalLabel">Add New Teacher</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/admin/add-course}" method="post">
-                    <div class="mb-3">
-                        <label for="courseName" class="form-label">Course Name</label>
-                        <input name="name" type="text" class="form-control" id="courseName"
-                               placeholder="Enter course name">
+                <form th:action="@{/admin/add-teacher}" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherName" class="form-label">Name</label>
+                            <input name="name" type="text" class="form-control" id="teacherName"
+                                   placeholder="Enter name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherSurname" class="form-label">Surname</label>
+                            <input name="surname" type="text" class="form-control" id="teacherSurname"
+                                   placeholder="Enter surname" required>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="courseDescription" class="form-label">Description</label>
-                        <textarea name="description" class="form-control" id="courseDescription" rows="3"
-                                  placeholder="Enter course description"></textarea>
+                        <label for="teacherEmail" class="form-label">Email</label>
+                        <input name="email" type="email" class="form-control" id="teacherEmail"
+                               placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="teacherPassword" class="form-label">Password</label>
+                        <input name="password" type="password" class="form-control" id="teacherPassword"
+                               placeholder="Enter password" required>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="courseDuration" class="form-label">Duration (months)</label>
-                            <input name="duration" type="number" class="form-control" id="courseDuration"
-                                   placeholder="6">
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherSpecialty" class="form-label">Specialty</label>
+                            <input name="specialty" type="text" class="form-control" id="teacherSpecialty"
+                                   placeholder="Enter specialty" required>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="coursePrice" class="form-label">Price ($)</label>
-                            <input name="price" type="number" class="form-control" id="coursePrice" placeholder="299">
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherExperience" class="form-label">Experience (Years)</label>
+                            <input name="experience" type="number" class="form-control" id="teacherExperience"
+                                   placeholder="Enter years of experience" required>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="courseStatus" class="form-label">Status</label>
-                            <select name="isActive" class="form-select" id="courseStatus">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherSalary" class="form-label">Salary ($)</label>
+                            <input name="salary" type="number" step="0.01" class="form-control" id="teacherSalary"
+                                   placeholder="Enter salary" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherBirthDate" class="form-label">Birth Date</label>
+                            <input name="birthDate" type="date" class="form-control" id="teacherBirthDate"
+                                   placeholder="Select birth date">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherPhoneNumber" class="form-label">Phone Number</label>
+                            <input name="phoneNumber" type="text" class="form-control" id="teacherPhoneNumber"
+                                   placeholder="Enter phone number">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="teacherStatus" class="form-label">Status</label>
+                            <select name="isActive" class="form-select" id="teacherStatus" required>
                                 <option value="true">Active</option>
                                 <option value="false">Inactive</option>
                             </select>
                         </div>
                     </div>
-                    <div class="modal-footer" style="margin-top: 35px; padding-bottom: -50px">
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add Course</button>
+                        <button type="submit" class="btn btn-primary">Add Teacher</button>
                     </div>
                 </form>
             </div>
@@ -258,33 +283,67 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="editModalLabel">Edit Course</h1>
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit Teacher</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">-->
-                <form id="editModalForm" th:action="@{/admin/update-course}" method="post">
-                    <input type="hidden" name="id" id="editCourseId">
-                    <div class="mb-3">
-                        <label for="editCourseName" class="form-label">Course Name</label>
-                        <input type="text" class="form-control" id="editCourseName" name="name">
+            <div class="modal-body">
+                <form id="editModalForm" th:action="@{/admin/update-teacher}" method="post">
+                    <input type="hidden" name="id" id="editTeacherId">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherName" class="form-label">Name</label>
+                            <input name="name" type="text" class="form-control" id="editTeacherName"
+                                   placeholder="Enter name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherSurname" class="form-label">Surname</label>
+                            <input name="surname" type="text" class="form-control" id="editTeacherSurname"
+                                   placeholder="Enter surname" required>
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="editCourseDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="editCourseDescription" name="description"
-                                  rows="3"></textarea>
+                        <label for="editTeacherEmail" class="form-label">Email</label>
+                        <input name="email" type="email" class="form-control" id="editTeacherEmail"
+                               placeholder="Enter email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTeacherPassword" class="form-label">Password (Leave blank to keep unchanged)</label>
+                        <input name="password" type="password" class="form-control" id="editTeacherPassword"
+                               placeholder="Enter new password">
                     </div>
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="editCourseDuration" class="form-label">Duration (months)</label>
-                            <input type="number" class="form-control" id="editCourseDuration" name="duration">
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherSpecialty" class="form-label">Specialty</label>
+                            <input name="specialty" type="text" class="form-control" id="editTeacherSpecialty"
+                                   placeholder="Enter specialty" required>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="editCoursePrice" class="form-label">Price ($)</label>
-                            <input type="number" class="form-control" id="editCoursePrice" name="price">
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherExperience" class="form-label">Experience (Years)</label>
+                            <input name="experience" type="number" class="form-control" id="editTeacherExperience"
+                                   placeholder="Enter years of experience" required>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="editCourseStatus" class="form-label">Status</label>
-                            <select class="form-select" id="editCourseStatus" name="isActive">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherSalary" class="form-label">Salary ($)</label>
+                            <input name="salary" type="number" step="0.01" class="form-control" id="editTeacherSalary"
+                                   placeholder="Enter salary" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherBirthDate" class="form-label">Birth Date</label>
+                            <input name="birthDate" type="date" class="form-control" id="editTeacherBirthDate"
+                                   placeholder="Select birth date">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherPhoneNumber" class="form-label">Phone Number</label>
+                            <input name="phoneNumber" type="text" class="form-control" id="editTeacherPhoneNumber"
+                                   placeholder="Enter phone number">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editTeacherStatus" class="form-label">Status</label>
+                            <select name="isActive" class="form-select" id="editTeacherStatus" required>
                                 <option value="true">Active</option>
                                 <option value="false">Inactive</option>
                             </select>
@@ -306,15 +365,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="changeStatusModalLabel">Change Course Status</h1>
+                <h1 class="modal-title fs-5" id="changeStatusModalLabel">Change Teacher Status</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="changeStatusForm" th:action="@{/admin/change-status-course}" method="post">
-                    <input type="hidden" name="id" id="changeStatusCourseId">
+                <form id="changeStatusForm" th:action="@{/admin/change-status-teacher}" method="post">
+                    <input type="hidden" name="id" id="changeStatusTeacherId">
                     <div class="mb-3">
                         <label for="newStatus" class="form-label">New Status</label>
-                        <select class="form-select" id="newStatus" name="status">
+                        <select class="form-select" id="newStatus" name="status" required>
                             <option value="true">Active</option>
                             <option value="false">Inactive</option>
                         </select>
@@ -336,29 +395,35 @@
         const editModal = document.getElementById('editModal');
         editModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
-            const courseId = button.getAttribute('data-id');
+            const id = button.getAttribute('data-id');
             const name = button.getAttribute('data-name');
-            const description = button.getAttribute('data-description');
-            const duration = button.getAttribute('data-duration');
-            const price = button.getAttribute('data-price');
+            const surname = button.getAttribute('data-surname');
+            const email = button.getAttribute('data-email');
+            const specialty = button.getAttribute('data-specialty');
+            const experience = button.getAttribute('data-experience');
+            const salary = button.getAttribute('data-salary');
+            const birthDate = button.getAttribute('data-birth-date');
+            const phoneNumber = button.getAttribute('data-phone-number');
             const status = button.getAttribute('data-status');
 
-            // Populate form fields
-            document.getElementById('editCourseId').value = courseId;
-            document.getElementById('editCourseName').value = name || '';
-            document.getElementById('editCourseDescription').value = description || '';
-            document.getElementById('editCourseDuration').value = duration || '';
-            document.getElementById('editCoursePrice').value = price || '';
-            document.getElementById('editCourseStatus').value = status === 'true' ? 'true' : 'false';
+            document.getElementById('editTeacherId').value = id || '';
+            document.getElementById('editTeacherName').value = name || '';
+            document.getElementById('editTeacherSurname').value = surname || '';
+            document.getElementById('editTeacherEmail').value = email || '';
+            document.getElementById('editTeacherSpecialty').value = specialty || '';
+            document.getElementById('editTeacherExperience').value = experience || '';
+            document.getElementById('editTeacherSalary').value = salary || '';
+            document.getElementById('editTeacherBirthDate').value = birthDate || '';
+            document.getElementById('editTeacherPhoneNumber').value = phoneNumber || '';
+            document.getElementById('editTeacherStatus').value = status === 'true' ? 'true' : 'false';
         });
 
         // Change Status Modal
         const changeStatusModal = document.getElementById('changeStatusModal');
         changeStatusModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
-            const courseId = button.getAttribute('data-id');
-
-            document.getElementById('changeStatusCourseId').value = courseId;
+            const id = button.getAttribute('data-id');
+            document.getElementById('changeStatusTeacherId').value = id || '';
         });
     });
 </script>
